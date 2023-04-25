@@ -14,6 +14,7 @@ const userSchema = new mongoose.Schema(
     loginCode: {
       type: String,
       required: false,
+      unique: true
     },
     isScoreboardAllowed: {
       type: Boolean,

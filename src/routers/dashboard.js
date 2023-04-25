@@ -1,4 +1,5 @@
 const express = require("express");
+const { customAlphabet } = require('nanoid')
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/user");
@@ -16,11 +17,11 @@ router.post("/createuser", async (req, res) => {
   delete req.body["adminId"];
 
   let user = new User({ ...req.body });
-  const loginCode = jwt.sign(
-    { id: user._id, time: Date.now() },
-    process.env.JWT_SECRET
+  nanoid = customAlphabet(
+    "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz"
   );
-  user.loginCode = loginCode;
+  // user.loginCode = 'nanoid()';
+  user.loginCode = nanoid(10);
 
   await user.save();
 
@@ -85,7 +86,7 @@ router.post("/updateGrade", async (req, res) => {
       critical: req.body.critical,
       psych: req.body.psych,
 
-      isScoreboardAllowed: true
+      isScoreboardAllowed: true,
     },
     { new: true }
   );
