@@ -6,7 +6,7 @@ const dashboardRouter = require('./routers/dashboard');
 const scoreboardRouter = require('./routers/scoreboard');
 
 const app = express();
-const port = 8080;
+const port = process.env.PORT || 8080;
 
 // DB connection
 dbConnect();
@@ -20,6 +20,11 @@ app.use(dashboardRouter);
 app.use(scoreboardRouter);
 
 
-app.listen(port, '10.17.250.251', () => {
-  console.log(`Server running on port ${port}.`);
-});
+if (process.env.PORT)
+  app.listen(port, () => {
+    console.log(`Production server running on port ${port}.`);
+  });
+else
+  app.listen(port, '10.17.250.251', () => {
+    console.log(`Devlopment server running on '10.17.250.251' port ${port}.`);
+  });
