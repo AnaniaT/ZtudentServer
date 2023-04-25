@@ -2,5 +2,7 @@ NOTES:
     4/25/2023
 1. check if you could use env variable for the isEditAllowed field insted of the database
 currently quering the database for the control field for the isEditAllowed field
+    -- left intentionally: even if environment variables are edited a refresh from the client is required however
+    using the same database solution would only reuire the refresh but not redeployment
 
-2. control the department list from the server
+2. control the department list from the server --done
