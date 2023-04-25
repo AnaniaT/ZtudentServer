@@ -6,6 +6,7 @@ const controlSchema = new mongoose.Schema({
     required: true,
     default: true,
   },
+  deptList: [{ type: String, required: true }],
 });
 
 const Control = mongoose.model("Control", controlSchema);
