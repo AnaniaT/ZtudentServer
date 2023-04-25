@@ -26,5 +26,5 @@ if (process.env.PORT)
   });
 else
   app.listen(port, '10.17.250.251', () => {
-    console.log(`Devlopment server running on '10.17.250.251' port ${port}.`);
+    console.log(`Development server running on '10.17.250.251' port ${port}.`);
   });
