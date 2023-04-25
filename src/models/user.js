@@ -1,8 +1,5 @@
 const mongoose = require("mongoose");
 
-const Control = require("./control");
-
-const controlID = process.env.PORT ? '6448199b13ebc0a074dd50ec' : '643460636ea0d50c78fd915f';
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -62,8 +59,8 @@ const userSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Control',
       immuteable: true,
-      set: value => new mongoose.Types.ObjectId(controlID),
-      default: new mongoose.Types.ObjectId(controlID)
+      set: value => new mongoose.Types.ObjectId(process.env.CONTROL_ID),
+      default: new mongoose.Types.ObjectId(process.env.CONTROL_ID)
     }
   },
   {
