@@ -6,3 +6,4 @@ currently quering the database for the control field for the isEditAllowed field
     using the same database solution would only reuire the refresh but not redeployment
 
 2. control the department list from the server --done
+3. unique field registration no. not raising error (could not catch duplicate key error on registration no. field) --done

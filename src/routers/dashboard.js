@@ -1,5 +1,4 @@
 const express = require("express");
-const { customAlphabet } = require('nanoid')
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/user");
@@ -17,16 +16,23 @@ router.post("/createuser", async (req, res) => {
   delete req.body["adminId"];
 
   let user = new User({ ...req.body });
-  nanoid = customAlphabet(
-    "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz"
-  );
-  // user.loginCode = 'nanoid()';
-  user.loginCode = nanoid(10);
 
-  await user.save();
-
-  await user.populate("control");
-  return res.send(user);
+  try {
+    await user.save();
+    await user.populate("control");
+    return res.send(user);
+  } catch (error) {
+    if (error.name === "MongoServerError" && error.code === 11000) {
+      const fieldName = Object.keys(error.keyPattern)[0];
+      return res
+        .status(400)
+        .send(`MongoServerError: ${fieldName} already exists`);
+    }
+    return res.status(500).send({
+      errorMsg: "Server Error",
+      error,
+    });
+  }
 });
 
 router.post("/logincode", async (req, res) => {

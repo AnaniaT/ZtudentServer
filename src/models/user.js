@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { customAlphabet } = require("nanoid");
 
 const userSchema = new mongoose.Schema(
   {
@@ -9,12 +10,20 @@ const userSchema = new mongoose.Schema(
     registrationNo: {
       type: String,
       required: true,
-      unique: true
+      unique: true,
     },
     loginCode: {
       type: String,
       required: false,
-      unique: true
+      unique: true,
+      immuteable: true,
+      default: "",
+      set: function (v) {
+        nanoid = customAlphabet(
+          "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz"
+        );
+        return nanoid(10);
+      },
     },
     isScoreboardAllowed: {
       type: Boolean,
@@ -60,9 +69,9 @@ const userSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Control',
       immuteable: true,
-      set: value => new mongoose.Types.ObjectId(process.env.CONTROL_ID),
-      default: new mongoose.Types.ObjectId(process.env.CONTROL_ID)
-    }
+      set: (value) => new mongoose.Types.ObjectId(process.env.CONTROL_ID),
+      default: new mongoose.Types.ObjectId(process.env.CONTROL_ID),
+    },
   },
   {
     timestamps: true,
@@ -72,7 +81,7 @@ const userSchema = new mongoose.Schema(
 // Model Functions (query methods)
 
 userSchema.statics.findByLoginCode = async function (loginCode) {
-  const user = await User.findOne({ loginCode }).populate('control');
+  const user = await User.findOne({ loginCode }).populate("control");
   if (!user) {
     throw new Error("Invalid login code");
   }
@@ -80,16 +89,7 @@ userSchema.statics.findByLoginCode = async function (loginCode) {
 };
 
 // Model Middlewares
-
-// TODO: set the loginCode when document created for the first time
-// userSchema.pre("save", async function (next) {
-//   // this refres to the saving object
-//   //   if (this.isModified("password")) {
-//   //     this.password = await bcrypt.hash(this.password, 8);
-//   //   }
-//   next();
-// });
-
+//...
 const User = mongoose.model("User", userSchema);
 
 module.exports = User;
