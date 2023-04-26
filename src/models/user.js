@@ -14,21 +14,14 @@ const userSchema = new mongoose.Schema(
     },
     loginCode: {
       type: String,
-      required: false,
+      required: true,
       unique: true,
-      immuteable: true,
       default: "",
-      set: function (v) {
-        nanoid = customAlphabet(
-          "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz"
-        );
-        return nanoid(10);
-      },
     },
     isScoreboardAllowed: {
       type: Boolean,
       required: false,
-      default: false
+      default: false,
     },
     eng: {
       type: Number,
@@ -67,7 +60,7 @@ const userSchema = new mongoose.Schema(
     },
     control: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Control',
+      ref: "Control",
       immuteable: true,
       set: (value) => new mongoose.Types.ObjectId(process.env.CONTROL_ID),
       default: new mongoose.Types.ObjectId(process.env.CONTROL_ID),
@@ -82,7 +75,17 @@ const userSchema = new mongoose.Schema(
 //...
 
 // Model Middlewares
-//...
+
+userSchema.pre("save", function (next) {
+  if (this.isNew) {
+    const nanoid = customAlphabet(
+      "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz"
+    );
+    this.loginCode = nanoid(10);
+  }
+  next();
+});
+
 const User = mongoose.model("User", userSchema);
 
 module.exports = User;

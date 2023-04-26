@@ -1,5 +1,6 @@
 const express = require("express");
 
+const Control = require("../models/control"); // apparently removing this yields an error
 const User = require("../models/user");
 
 const router = new express.Router();
@@ -40,9 +41,10 @@ router.post("/logincode", async (req, res) => {
 
   let user;
   try {
-    user = await User.findOne({ loginCode }).populate("control");
-    if (!user) throw new Error();
+    user = await User.findOne({ loginCode: req.body["loginCode"] });
+    if (!user) throw new Error("Invalid login code");
   } catch (e) {
+    console.log(e);
     return res.status(400).send();
   }
 
