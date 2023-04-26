@@ -79,14 +79,7 @@ const userSchema = new mongoose.Schema(
 );
 
 // Model Functions (query methods)
-
-userSchema.statics.findByLoginCode = async function (loginCode) {
-  const user = await User.findOne({ loginCode }).populate("control");
-  if (!user) {
-    throw new Error("Invalid login code");
-  }
-  return user;
-};
+//...
 
 // Model Middlewares
 //...

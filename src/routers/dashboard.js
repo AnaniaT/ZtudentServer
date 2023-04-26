@@ -1,8 +1,6 @@
 const express = require("express");
-const jwt = require("jsonwebtoken");
 
 const User = require("../models/user");
-const Control = require("../models/control");
 
 const router = new express.Router();
 
@@ -42,15 +40,9 @@ router.post("/logincode", async (req, res) => {
 
   let user;
   try {
-    let { id, time } = jwt.verify(
-      req.body["loginCode"],
-      process.env.JWT_SECRET
-    );
-    // console.log({ id, time });
-
-    user = await User.findByLoginCode(req.body.loginCode);
+    user = await User.findOne({ loginCode }).populate("control");
+    if (!user) throw new Error();
   } catch (e) {
-    console.log(e);
     return res.status(400).send();
   }
 
